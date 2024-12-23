@@ -1,4 +1,4 @@
-# Text Editor with Java Syntax Coloring
+# Java Terminal Editor
 
 This project is a basic text editor (similar to Notepad) that provides syntax coloring for Java code. It is designed to run directly in the Terminal and has been confirmed to work in:
 
