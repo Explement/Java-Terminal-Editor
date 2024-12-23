@@ -62,6 +62,7 @@ When prompted, provide the file path to an existing file, or enter a new file pa
 ### Known Issues
 - File handling may vary depending on the provided path format.
 - Syntax coloring may not support edge cases or complex Java constructs.
+- Syntax coloring focus color will be white, not really a 'glitch', but can be an inconvenience.
 
 ### Future Improvements
 - Add support for more programming languages.
