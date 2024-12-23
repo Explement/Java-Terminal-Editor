@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="icon.png" height="200" />
+</div>
+
 # Java Terminal Editor
 
 This project is a basic text editor (similar to Notepad) that provides syntax coloring for Java code. It is designed to run directly in the Terminal and has been confirmed to work in:
@@ -10,6 +14,7 @@ This project is a basic text editor (similar to Notepad) that provides syntax co
 - **Syntax Coloring:** Basic support for Java syntax highlighting.
 - **Cross-Terminal Support:** Compatible with multiple terminal environments on Windows.
 - **Interactive File Editing:** Edit existing files or create new ones via a simple popup interface.
+- **Massive Keyboard Support:** This has support for the following letters alternative letters; {1234567890 -= [] \ ; ',. / HOME END}
 
 While not a replacement for tools like Vim or more advanced terminal IDEs, this was developed as a side project.
 
