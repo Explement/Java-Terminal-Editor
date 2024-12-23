@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.png" width = 756px height = 124px/>
+  <img src="icon.png" width = 756px height = 256px/>
 </div>
 
 # Java Terminal Editor
