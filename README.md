@@ -70,7 +70,7 @@ When prompted, provide the file path to an existing file, or enter a new file pa
 - Syntax coloring focus color will be white, not really a 'glitch', but can be an inconvenience.
 
 ### Future Improvements
-- Add support for more programming languages. {Python, Lua, C#, C++}
+- Add support for more programming languages. {Rust, JavaScript, Lua, C#, C++}
 - Add focus colors when the cursor is inside of a keyword.
 - Add themes codable in Python or Lua.
 
