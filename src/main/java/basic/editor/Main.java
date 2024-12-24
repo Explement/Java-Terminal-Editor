@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-    
+
     // ANSI escape codes for colors
     public static final String RESET = "\u001B[0m";
     public static final String BLACK = "\u001B[30m";
@@ -40,8 +40,8 @@ public class Main {
     // Save file path to use freely
     private static String globalFilePath;
 
-    // Cursor status for blinking
-    //private static boolean cursorStatus = true;
+    // Get File extension
+    private static String extension;
 
     public static void main(String[] args) throws IOException {
         run();
@@ -50,7 +50,7 @@ public class Main {
 
         initializeKeyListener();
     }
-    
+
     private static void run() throws IOException { // Main code
         Scanner scanner = new Scanner(System.in);
         System.out.println("ENTER FILE PATH");
@@ -58,7 +58,8 @@ public class Main {
 
         if (filePath != null) {
             globalFilePath = filePath;
-
+            extension = globalFilePath.substring(globalFilePath.lastIndexOf(".") + 1);
+            System.out.println(extension);
             // Check if file exists
             File file = new File(filePath);
 
@@ -76,7 +77,9 @@ public class Main {
                     file.createNewFile();
                     System.out.println("FILE CREATED AT " + filePath);
 
-                    readFile(file);
+                    fileArrayList = new ArrayList<>();
+                    fileArrayList.add("");
+                    displayArrayList();
                 } else {
                     System.out.println("EXITING PROGRAM");
                     System.exit(0);
@@ -91,29 +94,29 @@ public class Main {
         try {
             System.out.println("-".repeat(60));
             Scanner scanner = new Scanner(file);
-    
+            
             fileArrayList = new ArrayList<>(); // Initialize the ArrayList
-            while (scanner.hasNextLine()) { 
+            while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 fileArrayList.add(line);
             }
-    
+
             System.out.println("File Contents:");
-            for (String line : fileArrayList) { 
+            for (String line : fileArrayList) {
                 System.out.println(line);
             }
-            
+
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-    
 
     public static void controlKeys(int index) {
         switch (index) {
             case 1: // Up
-                if (object > 0) object--;
+                if (object > 0)
+                    object--;
                 break;
             case 2: // Down
                 if (object < fileArrayList.size() - 1) {
@@ -144,71 +147,72 @@ public class Main {
                     column = 0; // Move to the beginning of the new line
                 } else {
                     fileArrayList.add("");
-                    object++; 
+                    object++;
                     column = 0; // Move the the beginning of the new line
                 }
                 break;
         }
         updateCursor();
     }
-    
-    
+
     public static void updateCursor() { // Update cursor
         removeCursor();
-    
+
         String line = fileArrayList.get(object);
         column = Math.min(column, line.length());
-    
+
         String modifiedLine = line.substring(0, column) + cursorKey + line.substring(column);
         fileArrayList.set(object, modifiedLine);
-        
+
         displayArrayList();
     }
-    
+
     private static void removeCursor() { // Remove cursor
         for (int i = 0; i < fileArrayList.size(); i++) {
             String line = fileArrayList.get(i);
             int cursorIndex = line.indexOf(cursorKey);
-    
+
             if (cursorIndex != -1) {
-                String modifiedLine = line.substring(0, cursorIndex) + line.substring(cursorIndex + 1); 
+                String modifiedLine = line.substring(0, cursorIndex) + line.substring(cursorIndex + 1);
                 fileArrayList.set(i, modifiedLine);
             }
         }
     }
-    
+
     private static void displayArrayList() { // Display ArrayList properly
         clearConsole();
         System.out.println("[F5 = Close] [F6 = Save]");
         System.out.println("-".repeat(60));
         for (String line : fileArrayList) {
-            String modifiedLine  = line;
+            String modifiedLine = line;
             System.out.println(syntaxHighlighting(modifiedLine));
         }
     }
 
     public static void editFile(String key, boolean isCaps) { // Edits file
         removeCursor();
-    
+
         String line = fileArrayList.get(object);
         column = Math.min(column, line.length());
-    
+
         if (key.length() == 1) { // Normal character
-            if (isCaps) key = key.toUpperCase();
-            else key = key.toLowerCase();
+            if (isCaps)
+                key = key.toUpperCase();
+            else
+                key = key.toLowerCase();
 
             String modifiedLine = line.substring(0, column) + key + line.substring(column);
             fileArrayList.set(object, modifiedLine);
-            column++; 
+            column++;
         } else if (key.equals("Space")) { // Spacebar
             String modifiedLine = line.substring(0, column) + " " + line.substring(column);
             fileArrayList.set(object, modifiedLine);
-            column++; 
+            column++;
         } else if (key.equals("Backspace") || key.equals("Delete")) { // Delete
             if (column > 0) {
                 String modifiedLine = line.substring(0, column - 1) + line.substring(column);
                 fileArrayList.set(object, modifiedLine);
-                column--; 
+                column--;
             } else if (object > 0) { // Move to end of previous line
                 if (fileArrayList.get(object).length() == 0) {
                     fileArrayList.remove(object);
@@ -218,7 +222,7 @@ public class Main {
             }
         }
 
-        updateCursor(); 
+        updateCursor();
     }
 
     public static void saveFile() throws IOException { // Saves the file
@@ -236,59 +240,113 @@ public class Main {
     public static void exitProgram() { // Exit program
         System.exit(0);
     }
-    
+
     public static String syntaxHighlighting(String line) { // Syntax highlighting
         Map<String, String> keywordColors = new HashMap<>();
 
-        keywordColors.put("System", RED);
-        keywordColors.put("Runtime", RED);
-        keywordColors.put("Math", RED);
-        keywordColors.put("String", RED);
-        keywordColors.put("Integer", RED);
-        keywordColors.put("Double", RED);
-        keywordColors.put("Object", RED);
+        if (extension == "py") { // Python-specific keywords
+            keywordColors.put("import", CYAN);
+            keywordColors.put("from", CYAN);
 
-        keywordColors.put("private", PURPLE);
-        keywordColors.put("public", PURPLE);
-        keywordColors.put("protected", PURPLE);
-        keywordColors.put("static", PURPLE);
-        keywordColors.put("final", PURPLE);
-        keywordColors.put("abstract", PURPLE);
-        keywordColors.put("synchronized", PURPLE);
-        keywordColors.put("volatile", PURPLE);
-        keywordColors.put("transient", PURPLE);
+            keywordColors.put("def", ORANGE);
+            keywordColors.put("return", ORANGE);
+            keywordColors.put("yield", ORANGE);
+            keywordColors.put("lambda", ORANGE);
 
-        keywordColors.put("char", YELLOW);
-        keywordColors.put("boolean", YELLOW);
-        keywordColors.put("int", YELLOW);
-        keywordColors.put("short", YELLOW);
-        keywordColors.put("byte", YELLOW);
-        keywordColors.put("long", YELLOW);
-        keywordColors.put("float", YELLOW);
-        keywordColors.put("double", YELLOW);
+            keywordColors.put("if", GREEN);
+            keywordColors.put("elif", GREEN);
+            keywordColors.put("else", GREEN);
+            keywordColors.put("for", GREEN);
+            keywordColors.put("while", GREEN);
+            keywordColors.put("break", GREEN);
+            keywordColors.put("continue", GREEN);
+            keywordColors.put("pass", GREEN);
 
-        keywordColors.put("if", GREEN);
-        keywordColors.put("else", GREEN);
-        keywordColors.put("for", GREEN);
-        keywordColors.put("while", GREEN);
-        keywordColors.put("do", GREEN);
-        keywordColors.put("switch", GREEN);
-        keywordColors.put("case", GREEN);
-        keywordColors.put("default", GREEN);
+            keywordColors.put("try", ORANGE);
+            keywordColors.put("except", ORANGE);
+            keywordColors.put("finally", ORANGE);
+            keywordColors.put("raise", ORANGE);
+            keywordColors.put("assert", ORANGE);
 
-        keywordColors.put("null", BLUE);
-        keywordColors.put("true", BLUE);
-        keywordColors.put("false", BLUE);
+            keywordColors.put("class", PURPLE);
+            keywordColors.put("self", PURPLE);
+            keywordColors.put("init", PURPLE);
+            keywordColors.put("del", PURPLE);
 
-        keywordColors.put("try", ORANGE);
-        keywordColors.put("catch", ORANGE);
-        keywordColors.put("throw", ORANGE);
-        keywordColors.put("throws", ORANGE);
-        keywordColors.put("return", ORANGE);
-        keywordColors.put("new", ORANGE);
+            keywordColors.put("True", BLUE);
+            keywordColors.put("False", BLUE);
+            keywordColors.put("None", BLUE);
 
-        keywordColors.put("import", CYAN);
-        keywordColors.put("package", CYAN);
+            keywordColors.put("and", RED);
+            keywordColors.put("or", RED);
+            keywordColors.put("not", RED);
+            keywordColors.put("in", RED);
+            keywordColors.put("is", RED);
+
+            keywordColors.put("int", YELLOW);
+            keywordColors.put("float", YELLOW);
+            keywordColors.put("str", YELLOW);
+            keywordColors.put("bool", YELLOW);
+            keywordColors.put("list", YELLOW);
+            keywordColors.put("tuple", YELLOW);
+            keywordColors.put("dict", YELLOW);
+            keywordColors.put("set", YELLOW);
+            keywordColors.put("frozenset", YELLOW);
+            keywordColors.put("complex", YELLOW);
+
+            keywordColors.put("with", CYAN);
+            keywordColors.put("as", CYAN);
+        } else if (extension == "java") { // Java-specific keywords
+            keywordColors.put("System", RED);
+            keywordColors.put("Runtime", RED);
+            keywordColors.put("Math", RED);
+            keywordColors.put("String", RED);
+            keywordColors.put("Integer", RED);
+            keywordColors.put("Double", RED);
+            keywordColors.put("Object", RED);
+
+            keywordColors.put("private", PURPLE);
+            keywordColors.put("public", PURPLE);
+            keywordColors.put("protected", PURPLE);
+            keywordColors.put("static", PURPLE);
+            keywordColors.put("final", PURPLE);
+            keywordColors.put("abstract", PURPLE);
+            keywordColors.put("synchronized", PURPLE);
+            keywordColors.put("volatile", PURPLE);
+            keywordColors.put("transient", PURPLE);
+
+            keywordColors.put("char", YELLOW);
+            keywordColors.put("boolean", YELLOW);
+            keywordColors.put("int", YELLOW);
+            keywordColors.put("short", YELLOW);
+            keywordColors.put("byte", YELLOW);
+            keywordColors.put("long", YELLOW);
+            keywordColors.put("float", YELLOW);
+            keywordColors.put("double", YELLOW);
+
+            keywordColors.put("if", GREEN);
+            keywordColors.put("else", GREEN);
+            keywordColors.put("for", GREEN);
+            keywordColors.put("while", GREEN);
+            keywordColors.put("do", GREEN);
+            keywordColors.put("switch", GREEN);
+            keywordColors.put("case", GREEN);
+            keywordColors.put("default", GREEN);
+
+            keywordColors.put("null", BLUE);
+            keywordColors.put("true", BLUE);
+            keywordColors.put("false", BLUE);
+
+            keywordColors.put("try", ORANGE);
+            keywordColors.put("catch", ORANGE);
+            keywordColors.put("throw", ORANGE);
+            keywordColors.put("throws", ORANGE);
+            keywordColors.put("return", ORANGE);
+            keywordColors.put("new", ORANGE);
+
+            keywordColors.put("import", CYAN);
+            keywordColors.put("package", CYAN);
+        } // Add support for more languages here (eg. C++, Rust, Javascript, etc.)
 
         for (Map.Entry<String, String> entry : keywordColors.entrySet()) {
             String keyword = entry.getKey();
@@ -309,11 +367,11 @@ public class Main {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             else
                 Runtime.getRuntime().exec("clear");
-        } catch (IOException | InterruptedException ex) {}
-    }  
-
+        } catch (IOException | InterruptedException ex) {
+        }
+    }
 
     private static void initializeKeyListener() { // Initialize 'KeyListener.java'
         KeyListener.main(arguments);
     }
-}   
+}
