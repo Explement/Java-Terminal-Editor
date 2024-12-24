@@ -16,7 +16,7 @@ This project is a basic text editor (similar to Notepad) that provides syntax co
 - **Interactive File Editing:** Edit existing files or create new ones via a simple popup interface.
 - **Massive Keyboard Support:** This has support for the following letters alternative letters; {1234567890 -= [] \ ; ',. / HOME END}
 
-While not a replacement for tools like Vim or more advanced terminal IDEs, this was developed as a side project.
+While not a replacement for tools like Vim or more advanced terminal IDEs, this isn't meant to be used, it was made as a fun challenge.
 
 ---
 
@@ -36,7 +36,7 @@ Download or clone the repository to your local machine.
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Explement/Java-Terminal-Editor
 cd <repository-folder>
 ```
 
@@ -70,7 +70,7 @@ When prompted, provide the file path to an existing file, or enter a new file pa
 - Syntax coloring focus color will be white, not really a 'glitch', but can be an inconvenience.
 
 ### Future Improvements
-- Add support for more programming languages.
+- Add support for more programming languages. {Python, Lua, C#, C++}
 - Add focus colors when the cursor is inside of a keyword.
 - Add themes codable in Python or Lua.
 
