@@ -36,7 +36,7 @@ Download or clone the repository to your local machine.
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Explement/Java-Terminal-Editor
 cd <repository-folder>
 ```
 
