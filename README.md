@@ -16,7 +16,7 @@ This project is a basic text editor (similar to Notepad) that provides syntax co
 - **Interactive File Editing:** Edit existing files or create new ones via a simple popup interface.
 - **Massive Keyboard Support:** This has support for the following letters alternative letters; {1234567890 -= [] \ ; ',. / HOME END}
 
-While not a replacement for tools like Vim or more advanced terminal IDEs, this was developed as a side project.
+While not a replacement for tools like Vim or more advanced terminal IDEs, this isn't meant to be used, it was made as a fun challenge.
 
 ---
 
